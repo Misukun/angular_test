@@ -1,0 +1,59 @@
+<div class="c-employeers-list grid">
+    <div class="col-12">
+        <p-toolbar styleClass="p-mb-4">
+            <ng-template pTemplate="left">
+                <button pButton pRipple label="New employeer" icon="pi pi-plus" class="p-button-success p-mr-2" (click)="newEmployeer()"></button>
+            </ng-template>
+        </p-toolbar>
+        <p-table #dt [value]="employeers" 
+            [rows]="10" 
+            [paginator]="true" 
+            [globalFilterFields]="['name', 'surname', 'workPosition','dateBirth']"
+            [rowHover]="true" dataKey="id"
+            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" 
+            [showCurrentPageReport]="true">
+            <ng-template pTemplate="caption">
+                <div class="p-d-flex p-ai-center p-jc-between">
+                    <h5 class="p-m-0">List of employeers</h5>
+                    <span class="p-input-icon-left">
+                        <i class="pi pi-search"></i>
+                        <!-- <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder="Search..." /> -->
+                    </span>
+                </div>
+            </ng-template>
+            <ng-template pTemplate="header">
+                <tr>
+                    <th pSortableColumn="name">Name <p-sortIcon field="name"></p-sortIcon></th>
+                    <th pSortableColumn="surname">Surname <p-sortIcon field="surname"></p-sortIcon></th>
+                    <th pSortableColumn="workPosition">Work position <p-sortIcon field="workPosition"></p-sortIcon></th>
+                    <th pSortableColumn="dateBirth">Date of birth <p-sortIcon field="dateBirth"></p-sortIcon></th>
+                    <th></th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-employeer>
+                <tr>
+                    <td>{{employeer.name}}</td>
+                    <td>{{employeer.surname}}</td>
+                    <td>{{employeer.workPosition}}</td>
+                    <td>{{employeer.dateBirth}}</td>
+                    <td>
+                        <button pButton pRipple icon="pi pi-pencil" class="p-button-success" (click)="editEmployeer(employeer)"></button>
+                        <button pButton pRipple icon="pi pi-trash" class="p-button-warning" (click)="deleteEmployeer(employeer)"></button>
+                    </td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="summary">
+                <div class="p-d-flex p-ai-center p-jc-between">
+                    In total there are {{employeers ? employeers.length : 0 }} employeers.
+                </div>
+            </ng-template>
+        </p-table>
+    </div>
+
+    <p-dialog [(visible)]="employeerDialog" header="Employeer Details" [modal]="true" styleClass="p-fluid">
+        <app-employeer></app-employeer>
+    </p-dialog>
+
+    <p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>
+</div>
+
