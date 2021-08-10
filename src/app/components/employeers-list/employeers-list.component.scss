@@ -1,3 +1,12 @@
 .c-employeers-list {
     margin-top: 20px;
+    .buttons-form {
+        margin-top: 300px;
+    }
+    .buttons-table {
+        justify-content: center;
+        button {
+            margin: 0 5px;
+        }
+    }
 }

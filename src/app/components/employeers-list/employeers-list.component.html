@@ -5,19 +5,17 @@
                 <button pButton pRipple label="New employeer" icon="pi pi-plus" class="p-button-success p-mr-2" (click)="newEmployeer()"></button>
             </ng-template>
         </p-toolbar>
-        <p-table #dt [value]="employeers" 
-            [rows]="10" 
-            [paginator]="true" 
+        <p-table #dt [value]="employeersList" 
+            [scrollable]="true" 
+            scrollHeight="500px"
             [globalFilterFields]="['name', 'surname', 'workPosition','dateBirth']"
-            [rowHover]="true" dataKey="id"
-            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" 
-            [showCurrentPageReport]="true">
+            [rowHover]="true" dataKey="id">
             <ng-template pTemplate="caption">
                 <div class="p-d-flex p-ai-center p-jc-between">
                     <h5 class="p-m-0">List of employeers</h5>
                     <span class="p-input-icon-left">
                         <i class="pi pi-search"></i>
-                        <!-- <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder="Search..." /> -->
+                        <input pInputText type="text" (input)="applyFilterGlobal($event, 'contains')" placeholder="Search..." />
                     </span>
                 </div>
             </ng-template>
@@ -37,23 +35,97 @@
                     <td>{{employeer.workPosition}}</td>
                     <td>{{employeer.dateBirth}}</td>
                     <td>
-                        <button pButton pRipple icon="pi pi-pencil" class="p-button-success" (click)="editEmployeer(employeer)"></button>
-                        <button pButton pRipple icon="pi pi-trash" class="p-button-warning" (click)="deleteEmployeer(employeer)"></button>
+                        <div class="grid buttons-table">
+                            <button pButton pRipple icon="pi pi-pencil" class="p-button-success" (click)="editEmployeer(employeer)"></button>
+                            <button pButton pRipple icon="pi pi-trash" class="p-button-danger" (click)="deleteEmployeer(employeer)"></button>
+                        </div>
                     </td>
                 </tr>
             </ng-template>
             <ng-template pTemplate="summary">
                 <div class="p-d-flex p-ai-center p-jc-between">
-                    In total there are {{employeers ? employeers.length : 0 }} employeers.
+                    In total there are {{employeersList ? employeersList.length : 0 }} employeers.
                 </div>
             </ng-template>
         </p-table>
     </div>
 
-    <p-dialog [(visible)]="employeerDialog" header="Employeer Details" [modal]="true" styleClass="p-fluid">
-        <app-employeer></app-employeer>
+    <p-dialog [(visible)]="employeerDialog" header="Employeer Details" [modal]="true" styleClass="p-fluid" [style]="{width: '700px'}">
+        <ng-template pTemplate="content">
+            <form #empForm="ngForm" (ngSubmit)="saveEmployeer(empForm)">
+                <input type="hidden" 
+                       name="$key" 
+                       #key="ngModel" 
+                       [(ngModel)]="employeerService.selectedEmployeer.$key" />
+                <div class="grid p-fluid">
+                    <div class="col-6 p-field form-group">
+                        <label for="name">Name</label>
+                        <input type="text" 
+                               pInputText 
+                               id="name" 
+                               name="name" 
+                               placeholder="Insert a name" 
+                               #name="ngModel" 
+                               (ngModelChange)="changeDetected = true" 
+                               [(ngModel)]="employeerService.selectedEmployeer.name" required autofocus />
+                    </div>
+                    <div class="col-6 p-field form-group">
+                        <label for="surname">Surname</label>
+                        <input type="text" 
+                               pInputText 
+                               id="surname" 
+                               name="surname" 
+                               placeholder="Insert a surname" 
+                               #surname="ngModel" 
+                               (ngModelChange)="changeDetected = true" 
+                               [(ngModel)]="employeerService.selectedEmployeer.surname" required />
+                    </div>
+                </div>
+                <div class="grid p-fluid">
+                    <div class="col-6 p-field form-group">
+                        <label for="dateBirth">Date of birth</label>
+                        <p-calendar #dBirth="ngModel" 
+                                    dateFormat="dd/mm/yy" 
+                                    [yearNavigator]="true" 
+                                    [monthNavigator]="true" 
+                                    yearRange="1900:2021" 
+                                    [readonlyInput]="true" 
+                                    name="dateBirth" 
+                                    placeholder="Select a date of birth" 
+                                    (ngModelChange)="changeDetected = true" 
+                                    [(ngModel)]="employeerService.selectedEmployeer.dateBirth"
+                                    id="dateBirth"></p-calendar>
+                    </div>
+
+                    <div class="col-6 p-field form-group">
+                        <label for="workPosition">Work position</label>
+                        <p-dropdown #wPos="ngModel" 
+                                    id="workPosition" 
+                                    name="workPosition" 
+                                    [options]="workPosition.positions" 
+                                    (ngModelChange)="changeDetected = true" 
+                                    [(ngModel)]="employeerService.selectedEmployeer.workPosition"
+                                    placeholder="Select a work position">
+                            <ng-template let-option pTemplate="item">
+                                <span [class]="'product-badge'">{{option}}</span>
+                            </ng-template>
+                        </p-dropdown>
+                    </div>
+            
+                </div>
+
+                <div class="grid p-field form-group buttons-form">
+                    <div class="col-6 p-fluid">
+                        <button pButton pRipple type="reset" label="Cancel" icon="pi pi-times" class="p-button-warning" (click)="hideDialog(empForm)"></button>
+                    </div>
+                    <div class="col-6 p-fluid">
+                        <button pButton pRipple type="submit" label="Save" icon="pi pi-check" [ngClass]="{'p-disabled': !changeDetected}" class="p-button-success"></button>
+                    </div>
+                </div>
+            </form>
+        </ng-template>
     </p-dialog>
 
-    <p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>
+    <p-confirmDialog [style]="{width: '700px'}"></p-confirmDialog>
 </div>
 

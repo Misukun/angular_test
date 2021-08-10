@@ -3,5 +3,5 @@ export class Employeer {
     name!: string;
     surname!: string;
     workPosition!: string;
-    dateBirth!: string;
+    dateBirth!: any;
 }

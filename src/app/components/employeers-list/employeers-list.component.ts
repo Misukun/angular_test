@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { NgForm } from '@angular/forms';
+import { Table } from 'primeng/table';
 
 // Model
 import { Employeer } from '../../models/employeer';
@@ -19,33 +21,51 @@ export class EmployeersListComponent implements OnInit {
 
   employeerDialog: boolean = false;
 
-  employeers: Employeer[] = [];
+  employeersList: Employeer[] = [];
 
-  employeer!: Employeer;
+  employeer: Employeer = new Employeer;
 
-  workPosition!: WorkPosition;
+  workPosition: WorkPosition = new WorkPosition;
 
   submitted: boolean = false;
 
-  constructor(private employeerService: EmployeerService, 
+  changeDetected: boolean = false;
+  
+  @ViewChild('dt') dt: Table | undefined;
+
+  constructor(public employeerService: EmployeerService, 
               private messageService: MessageService, 
               private confirmationService: ConfirmationService,
               private workPositionService: WorkPositionService) { }
 
   ngOnInit(): void {
-    // this.employeerService.getEmployeers().then(data => this.employeers = data);
+    this.workPositionService.getWorkPosition()
+      .subscribe((data: WorkPosition) => {
+        this.workPosition = data;
+      });
+
+    this.employeerService.getEmployeers()
+      .snapshotChanges()
+      .subscribe(data => {
+        data.forEach(elem => {
+          let x: any = elem.payload.toJSON();
+          x.$key = elem.key;
+          x.dateBirth = new Date(x.dateBirth);
+          this.employeersList.push(x as Employeer);
+        });
+      });
+    this.hideDialog();
   }
 
   newEmployeer() {
     this.employeer = new Employeer();
     this.submitted = false;
     this.employeerDialog = true;
-    console.log('create new');
   }
 
   editEmployeer(employeer: Employeer) {
-      this.employeer = {...employeer};
-      this.employeerDialog = true;
+    this.employeerService.selectedEmployeer = Object.assign({}, employeer);
+    this.employeerDialog = true;
   }
 
   deleteEmployeer(employeer: Employeer) {
@@ -54,11 +74,75 @@ export class EmployeersListComponent implements OnInit {
           header: 'Confirm',
           icon: 'pi pi-exclamation-triangle',
           accept: () => {
-              // this.employeers = this.employeers.filter((val: { id: any; }) => val.id !== employeer.id);
-              this.employeer = new Employeer;
-              this.messageService.add({severity:'success', summary: 'Successful', detail: 'Employeer Deleted', life: 3000});
+            this.employeerService.deleteEmployeer(employeer.$key);
+            this.employeersList = [];
+            this.messageService.add({severity:'success', summary: 'Successful', detail: 'Employeer Deleted', life: 5000});
           }
       });
+  }
+
+  hideDialog(employeerForm?: NgForm) {
+
+    if (employeerForm !== null) {
+      if (employeerForm) {
+        employeerForm.reset();
+      }
+      this.employeerDialog = false;
+      this.submitted = false;
+      this.employeerService.selectedEmployeer = new Employeer();
+    }
+  }
+
+  saveEmployeer(employeerForm: NgForm) {
+    
+    let date;
+
+    if (employeerForm.value.$key != null) {
+
+      if(employeerForm.value.name && employeerForm.value.surname && employeerForm.value.workPosition && employeerForm.value.dateBirth) {
+
+        if (employeerForm.value.dateBirth) {
+          date = employeerForm.value.dateBirth.toString();
+          employeerForm.value.dateBirth = Date.parse(date);
+        }      
+    
+        this.employeerService.putEmployeer(employeerForm.value);
+        this.submitted = true;
+        this.employeersList = [];
+
+        this.hideDialog(employeerForm);
+
+        this.messageService.add({severity:'success', summary: 'Successful', detail: 'Employeer Updated', life: 3000});
+      } else {
+        this.messageService.add({severity:'error', summary: 'Error', detail: 'Is mandatory fill all inputs', life: 5000});
+      }
+
+    } else {  
+
+      if(employeerForm.value.name && employeerForm.value.surname && employeerForm.value.workPosition && employeerForm.value.dateBirth) {
+
+        if (employeerForm.value.dateBirth) {
+          date = employeerForm.value.dateBirth.toString();
+          employeerForm.value.dateBirth = Date.parse(date);
+        }      
+    
+        this.employeerService.createEmployeer(employeerForm.value);
+        this.submitted = true;
+        this.hideDialog(employeerForm);
+    
+        this.employeersList = [];
+  
+        this.messageService.add({severity:'success', summary: 'Successful', detail: 'Employeer created', life: 3000});
+      } else {
+        this.messageService.add({severity:'error', summary: 'Error', detail: 'Is mandatory fill all inputs', life: 5000});
+      }
+    }
+
+    this.changeDetected = false;
+  }
+
+  applyFilterGlobal($event: any, stringVal: string) {
+    this.dt!.filterGlobal(($event.target as HTMLInputElement).value, stringVal);
   }
 
 }
