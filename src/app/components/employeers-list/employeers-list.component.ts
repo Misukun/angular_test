@@ -98,41 +98,24 @@ export class EmployeersListComponent implements OnInit {
     
     let date;
 
-    if (employeerForm.value.$key != null) {
+    if(employeerForm.value.name && employeerForm.value.surname && employeerForm.value.workPosition && employeerForm.value.dateBirth) {
 
-      if(employeerForm.value.name && employeerForm.value.surname && employeerForm.value.workPosition && employeerForm.value.dateBirth) {
+      date = employeerForm.value.dateBirth.toString();
+      employeerForm.value.dateBirth = Date.parse(date);
 
-        date = employeerForm.value.dateBirth.toString();
-        employeerForm.value.dateBirth = Date.parse(date);
-
+      if (employeerForm.value.$key != null) {
         this.employeerService.putEmployeer(employeerForm.value);
-        this.submitted = true;
-        this.employeersList = [];
-
-        this.hideDialog(employeerForm);
-
-        this.messageService.add({severity:'success', summary: 'Successful', detail: 'Employeer Updated', life: 3000});
       } else {
-        this.messageService.add({severity:'error', summary: 'Error', detail: 'Is mandatory fill all inputs', life: 5000});
-      }
-
-    } else {  
-
-      if(employeerForm.value.name && employeerForm.value.surname && employeerForm.value.workPosition && employeerForm.value.dateBirth) {
-
-        date = employeerForm.value.dateBirth.toString();
-        employeerForm.value.dateBirth = Date.parse(date);      
-    
         this.employeerService.createEmployeer(employeerForm.value);
-        this.submitted = true;
-        this.hideDialog(employeerForm);
-    
-        this.employeersList = [];
-  
-        this.messageService.add({severity:'success', summary: 'Successful', detail: 'Employeer created', life: 3000});
-      } else {
-        this.messageService.add({severity:'error', summary: 'Error', detail: 'Is mandatory fill all inputs', life: 5000});
       }
+      this.submitted = true;
+      this.employeersList = [];
+
+      this.hideDialog(employeerForm);
+
+      this.messageService.add({severity:'success', summary: 'Successful', detail: 'Employeer Updated', life: 3000});
+    } else {
+      this.messageService.add({severity:'error', summary: 'Error', detail: 'Is mandatory fill all inputs', life: 5000});
     }
 
     this.changeDetected = false;
