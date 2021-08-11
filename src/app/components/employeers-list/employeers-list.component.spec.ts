@@ -202,7 +202,6 @@ describe('Test EmployeersListComponent', () => {
     fixture.detectChanges();
     
     expect(component.saveEmployeer).toBeTruthy();
-    // expect(component.submitted).toBeTrue();
     expect(component.changeDetected).toBeFalse();
     expect(component.employeersList).toEqual([]);
     expect(component.employeerService.employeersList.update).toHaveBeenCalled;
@@ -227,7 +226,6 @@ describe('Test EmployeersListComponent', () => {
     fixture.detectChanges();
 
     expect(component.saveEmployeer).toBeTruthy();
-    // expect(component.submitted).toBeTrue();
     expect(component.changeDetected).toBeFalse();
     expect(component.employeersList).toEqual([]);
     expect(component.employeerService.employeersList.update).toHaveBeenCalled;
@@ -247,7 +245,6 @@ describe('Test EmployeersListComponent', () => {
     fixture.detectChanges();
     
     expect(component.saveEmployeer).toBeTruthy();
-    // expect(component.submitted).toBeTrue();
     expect(component.changeDetected).toBeFalse();
     expect(component.employeersList).toEqual([]);
     expect(component.employeerService.employeersList.push).toHaveBeenCalled;
@@ -272,7 +269,6 @@ describe('Test EmployeersListComponent', () => {
     fixture.detectChanges();
 
     expect(component.saveEmployeer).toBeTruthy();
-    // expect(component.submitted).toBeTrue();
     expect(component.changeDetected).toBeFalse();
     expect(component.employeersList).toEqual([]);
     expect(component.employeerService.employeersList.update).toHaveBeenCalled;
