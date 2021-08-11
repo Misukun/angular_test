@@ -1,5 +1,5 @@
 // Core
-import { NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule, NO_ERRORS_SCHEMA } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
@@ -14,7 +14,7 @@ import { AppComponent } from './app.component';
 import { AngularFireModule } from '@angular/fire';
 import { environment } from '../environments/environment';
 
-// Prime NG
+// Prime NG Modules
 import {DropdownModule} from 'primeng/dropdown';
 import {ButtonModule} from 'primeng/button';
 import {TableModule} from 'primeng/table';
@@ -24,8 +24,17 @@ import {InputTextModule} from 'primeng/inputtext';
 import {CalendarModule} from 'primeng/calendar';
 import {ToolbarModule} from 'primeng/toolbar';
 import {ToastModule} from 'primeng/toast';
+import {MessageModule} from 'primeng/message';
+
+// Prime NG services
 import {ConfirmationService} from 'primeng/api';
 import {MessageService} from 'primeng/api';
+
+// Prime NG components
+// import { Dialog } from 'primeng/dialog';
+// import { ConfirmDialog } from 'primeng/confirmdialog';
+// import { Toolbar } from 'primeng/toolbar';
+// import { Table } from 'primeng/table';
 
 // Animations
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
@@ -57,6 +66,7 @@ import { WorkPositionService } from './services/work-position.service';
     InputTextModule,
     ToolbarModule,
     ToastModule,
+    MessageModule,
     CalendarModule
   ],
   providers: [

@@ -15,7 +15,7 @@
                     <h5 class="p-m-0">List of employeers</h5>
                     <span class="p-input-icon-left">
                         <i class="pi pi-search"></i>
-                        <input pInputText type="text" (input)="applyFilterGlobal($event, 'contains')" placeholder="Search..." />
+                        <input class="search-input" pInputText type="text" (input)="applyFilterGlobal($event, 'contains')" placeholder="Search..." />
                     </span>
                 </div>
             </ng-template>
@@ -50,7 +50,7 @@
         </p-table>
     </div>
 
-    <p-dialog [(visible)]="employeerDialog" header="Employeer Details" [modal]="true" styleClass="p-fluid" [style]="{width: '700px'}">
+    <p-dialog [(visible)]="employeerDialog" header="Employeer Details" [closable]="false" [modal]="true" styleClass="p-fluid" [style]="{width: '700px'}">
         <ng-template pTemplate="content">
             <form #empForm="ngForm" (ngSubmit)="saveEmployeer(empForm)">
                 <input type="hidden" 

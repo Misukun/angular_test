@@ -14,7 +14,7 @@ export class EmployeerService {
   employeersList!: AngularFireList<any>;
   selectedEmployeer: Employeer = new Employeer();
 
-  constructor(private firebase: AngularFireDatabase) { }
+  constructor(public firebase: AngularFireDatabase) { }
 
   // GET method
   getEmployeers() {
@@ -36,7 +36,8 @@ export class EmployeerService {
     this.employeersList.update(employeer.$key, {
         name: employeer.name,
         surname: employeer.surname,
-        workPosition: employeer.workPosition
+        workPosition: employeer.workPosition,
+        dateBirth: employeer.dateBirth
     });
   }
 

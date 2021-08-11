@@ -1,6 +1,6 @@
 import { WorkPosition } from './work-position';
 
-describe('WorkPosition', () => {
+describe('Test WorkPosition Model', () => {
   it('should create an instance', () => {
     expect(new WorkPosition()).toBeTruthy();
   });

@@ -1,12 +1,15 @@
 import { TestBed } from '@angular/core/testing';
 
 import { WorkPositionService } from './work-position.service';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
-describe('WorkPositionService', () => {
+describe('Test WorkPositionService: ', () => {
   let service: WorkPositionService;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
+    TestBed.configureTestingModule({
+      imports: [HttpClientTestingModule]
+    }).compileComponents();
     service = TestBed.inject(WorkPositionService);
   });
 

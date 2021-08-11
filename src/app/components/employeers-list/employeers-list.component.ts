@@ -1,5 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
+
+// PrimeNG
 import { Table } from 'primeng/table';
 
 // Model
@@ -34,9 +36,9 @@ export class EmployeersListComponent implements OnInit {
   @ViewChild('dt') dt: Table | undefined;
 
   constructor(public employeerService: EmployeerService, 
-              private messageService: MessageService, 
-              private confirmationService: ConfirmationService,
-              private workPositionService: WorkPositionService) { }
+              public messageService: MessageService, 
+              public confirmationService: ConfirmationService,
+              public workPositionService: WorkPositionService) { }
 
   ngOnInit(): void {
     this.workPositionService.getWorkPosition()
@@ -54,16 +56,17 @@ export class EmployeersListComponent implements OnInit {
           this.employeersList.push(x as Employeer);
         });
       });
-    this.hideDialog();
   }
 
   newEmployeer() {
+    this.changeDetected = false;
     this.employeer = new Employeer();
     this.submitted = false;
     this.employeerDialog = true;
   }
 
   editEmployeer(employeer: Employeer) {
+    this.changeDetected = false;
     this.employeerService.selectedEmployeer = Object.assign({}, employeer);
     this.employeerDialog = true;
   }
@@ -81,16 +84,14 @@ export class EmployeersListComponent implements OnInit {
       });
   }
 
-  hideDialog(employeerForm?: NgForm) {
+  hideDialog(employeerForm: NgForm) {
 
-    if (employeerForm !== null) {
-      if (employeerForm) {
-        employeerForm.reset();
-      }
-      this.employeerDialog = false;
-      this.submitted = false;
-      this.employeerService.selectedEmployeer = new Employeer();
-    }
+    let myForm = employeerForm;
+    myForm.reset();  
+    this.employeerDialog = false;
+    this.submitted = false;
+    this.employeerService.selectedEmployeer = new Employeer();
+    
   }
 
   saveEmployeer(employeerForm: NgForm) {
@@ -101,11 +102,9 @@ export class EmployeersListComponent implements OnInit {
 
       if(employeerForm.value.name && employeerForm.value.surname && employeerForm.value.workPosition && employeerForm.value.dateBirth) {
 
-        if (employeerForm.value.dateBirth) {
-          date = employeerForm.value.dateBirth.toString();
-          employeerForm.value.dateBirth = Date.parse(date);
-        }      
-    
+        date = employeerForm.value.dateBirth.toString();
+        employeerForm.value.dateBirth = Date.parse(date);
+
         this.employeerService.putEmployeer(employeerForm.value);
         this.submitted = true;
         this.employeersList = [];
@@ -121,10 +120,8 @@ export class EmployeersListComponent implements OnInit {
 
       if(employeerForm.value.name && employeerForm.value.surname && employeerForm.value.workPosition && employeerForm.value.dateBirth) {
 
-        if (employeerForm.value.dateBirth) {
-          date = employeerForm.value.dateBirth.toString();
-          employeerForm.value.dateBirth = Date.parse(date);
-        }      
+        date = employeerForm.value.dateBirth.toString();
+        employeerForm.value.dateBirth = Date.parse(date);      
     
         this.employeerService.createEmployeer(employeerForm.value);
         this.submitted = true;
