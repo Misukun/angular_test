@@ -73,7 +73,7 @@ export class EmployeersListComponent implements OnInit {
 
   deleteEmployeer(employeer: Employeer) {
       this.confirmationService.confirm({
-          message: 'Are you sure you want to delete ' + employeer.name + '?',
+          message: 'Are you sure you want to delete ' + employeer.name + ' ' + employeer.surname + '?',
           header: 'Confirm',
           icon: 'pi pi-exclamation-triangle',
           accept: () => {
